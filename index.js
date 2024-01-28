@@ -14,6 +14,9 @@ document.addEventListener('click', function(e){
     else if(e.target.id === 'tweet-btn'){
         handleTweetBtnClick()
     }
+    else if(e.target.dataset.newReply){
+        handleNewReplyClick(e.target.dataset.newReply)
+    }
 })
  
 function handleLikeClick(tweetId){ 
@@ -47,6 +50,8 @@ function handleRetweetClick(tweetId){
 }
 
 function handleReplyClick(replyId){
+
+    // Show replies if there are any
     document.getElementById(`replies-${replyId}`).classList.toggle('hidden')
 }
 
@@ -70,12 +75,37 @@ function handleTweetBtnClick(){
     }
 
 }
+function handleNewReplyClick(tweetId){
+    const replyInput = document.getElementById(`reply-${tweetId}`)
+    const targetTweetObj = tweetsData.filter(function(tweet){
+        return tweet.uuid === tweetId
+    })[0]
+    let targetReplyObj = {
+        handle: `@Scrimba`,
+        profilePic: `images/scrimbalogo.png`,
+        tweetText: replyInput.value
+    }
+    targetTweetObj.replies.unshift(targetReplyObj)
+    replyInput.value = ""
+    render()
+    document.getElementById(`replies-${tweetId}`).classList.remove('hidden')
+    
+}
 
 function getFeedHtml(){
     let feedHtml = ``
     
     tweetsData.forEach(function(tweet){
         
+        let newReply = `
+            <div class="tweet-reply reply-div">
+                <img src="images/scrimbalogo.png" class="profile-pic">
+                <textarea id="reply-${tweet.uuid}" placeholder="Post a reply"></textarea>
+                <button class="reply-btn" data-new-reply="${tweet.uuid}" >Reply</button>
+            </div>
+        
+        `
+
         let likeIconClass = ''
         
         if (tweet.isLiked){
@@ -88,21 +118,22 @@ function getFeedHtml(){
             retweetIconClass = 'retweeted'
         }
         
-        let repliesHtml = ''
+        let repliesHtml = newReply
+        // Render a reply section always
         
         if(tweet.replies.length > 0){
             tweet.replies.forEach(function(reply){
                 repliesHtml+=`
-<div class="tweet-reply">
-    <div class="tweet-inner">
-        <img src="${reply.profilePic}" class="profile-pic">
-            <div>
-                <p class="handle">${reply.handle}</p>
-                <p class="tweet-text">${reply.tweetText}</p>
-            </div>
-        </div>
-</div>
-`
+                <div class="tweet-reply">
+                    <div class="tweet-inner">
+                        <img src="${reply.profilePic}" class="profile-pic">
+                            <div>
+                                <p class="handle">${reply.handle}</p>
+                                <p class="tweet-text">${reply.tweetText}</p>
+                            </div>
+                        </div>
+                </div>
+                `
             })
         }
         

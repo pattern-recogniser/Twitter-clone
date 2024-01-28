@@ -40,37 +40,61 @@ header{
     padding-bottom: 25px;
 }
 
-.tweet-input-area {
+/* .tweet-input-area {
     display: flex;
     align-items: flex-start;
     gap: 10px;
-}
+} */
 
 /* textareas + btn */
+
+.tweet-input-area textarea{
+    display: flex;
+    align-items: flex-start;
+    gap: 10px;
+    font-size: 20px;
+    height: 60px;
+}
+
+.reply-div{
+    display: flex;
+    flex-direction: row;
+    align-items: space-between;
+    font-size: 12px;
+    height: 50px;
+}
 
 textarea{
     border: none;
     resize: none;
     padding: 10px;
     margin: 0 0 20px 0;
-    height: 60px;
     width: 100%;
-    font-size: 20px;
-    line-height: 30px;
+    line-height: 20px;
+    height: 40px;
+    font-size: 13px;
 }
+
 
 button{
     background-color: #1DA1F2;
     border: none;
     color: white;
-    padding: 10px 19px;
+    padding: 10px 10px;
     border-radius: 20px;
-    width: 100%; 
     cursor: pointer;
-    font-size: 20px;
     font-weight: 600;
 }
 
+#tweet-btn{
+    font-size: 20px;
+    font-weight: 600;
+    width: 100%; 
+}
+
+#reply-btn{
+    font-size: 15px;
+}
 /* tweet */
 
 .tweet{
