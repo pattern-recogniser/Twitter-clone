@@ -21,3 +21,4 @@ Javascript
 - Multiple event handlers
 - Storing data in HTML elements, and accessing them in JS for event handling
 - Setting and getting elements in localStorage
+- Filtering elements from an array of JSON objects using the `.filter` method

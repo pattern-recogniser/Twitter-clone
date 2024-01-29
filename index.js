@@ -26,6 +26,9 @@ document.addEventListener('click', function(e){
     else if(targetObj.dataset.reply){
         handleReplyClick(targetObj.dataset.reply)
     }
+    else if(targetObj.dataset.trash){
+        handleTrashClick(targetObj.dataset.trash)
+    }
     else if(targetObj.id === 'tweet-btn'){
         handleTweetBtnClick()
     }
@@ -108,6 +111,13 @@ function handleNewReplyClick(tweetId){
     
 }
 
+function handleTrashClick(tweetId){
+    tweetsDataToUse = tweetsDataToUse.filter(function(tweet){
+        return tweet.uuid != tweetId
+    })
+    render()
+}
+
 function getFeedHtml(){
     let feedHtml = ``
     
@@ -179,6 +189,11 @@ function getFeedHtml(){
                     data-retweet="${tweet.uuid}"
                     ></i>
                     ${tweet.retweets}
+                </span>
+                <span class="tweet-detail">
+                    <i class="fa-solid fa-trash"
+                    data-trash="${tweet.uuid}"
+                    ></i>
                 </span>
             </div>   
         </div>            
