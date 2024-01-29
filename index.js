@@ -1,26 +1,42 @@
 import { tweetsData } from './data.js'
 import { v4 as uuidv4 } from 'https://jspm.dev/uuid';
 
+let tweetsDataToUse = []
+// Get tweetsData from local if present, else using from data.js
+// Overwrite tweetsData if present in localStorage
+let localTweeetsData = localStorage.getItem("tweetsDataLocal")
+if (localTweeetsData){
+    tweetsDataToUse = JSON.parse(localTweeetsData)
+}
+else {
+    tweetsDataToUse = tweetsData
+}
+
+
+// After every event, write/ update localStorage to reflect new tweetsData
+
 document.addEventListener('click', function(e){
-    if(e.target.dataset.like){
+    const targetObj = e.target
+    if(targetObj.dataset.like){
        handleLikeClick(e.target.dataset.like) 
     }
-    else if(e.target.dataset.retweet){
-        handleRetweetClick(e.target.dataset.retweet)
+    else if(targetObj.dataset.retweet){
+        handleRetweetClick(targetObj.dataset.retweet)
     }
-    else if(e.target.dataset.reply){
-        handleReplyClick(e.target.dataset.reply)
+    else if(targetObj.dataset.reply){
+        handleReplyClick(targetObj.dataset.reply)
     }
-    else if(e.target.id === 'tweet-btn'){
+    else if(targetObj.id === 'tweet-btn'){
         handleTweetBtnClick()
     }
-    else if(e.target.dataset.newReply){
-        handleNewReplyClick(e.target.dataset.newReply)
+    else if(targetObj.dataset.newReply){
+        handleNewReplyClick(targetObj.dataset.newReply)
     }
+    updateLocalStorage()
 })
  
 function handleLikeClick(tweetId){ 
-    const targetTweetObj = tweetsData.filter(function(tweet){
+    const targetTweetObj = tweetsDataToUse.filter(function(tweet){
         return tweet.uuid === tweetId
     })[0]
 
@@ -35,7 +51,7 @@ function handleLikeClick(tweetId){
 }
 
 function handleRetweetClick(tweetId){
-    const targetTweetObj = tweetsData.filter(function(tweet){
+    const targetTweetObj = tweetsDataToUse.filter(function(tweet){
         return tweet.uuid === tweetId
     })[0]
     
@@ -59,7 +75,7 @@ function handleTweetBtnClick(){
     const tweetInput = document.getElementById('tweet-input')
 
     if(tweetInput.value){
-        tweetsData.unshift({
+        tweetsDataToUse.unshift({
             handle: `@Scrimba`,
             profilePic: `images/scrimbalogo.png`,
             likes: 0,
@@ -77,7 +93,7 @@ function handleTweetBtnClick(){
 }
 function handleNewReplyClick(tweetId){
     const replyInput = document.getElementById(`reply-${tweetId}`)
-    const targetTweetObj = tweetsData.filter(function(tweet){
+    const targetTweetObj = tweetsDataToUse.filter(function(tweet){
         return tweet.uuid === tweetId
     })[0]
     let targetReplyObj = {
@@ -95,7 +111,7 @@ function handleNewReplyClick(tweetId){
 function getFeedHtml(){
     let feedHtml = ``
     
-    tweetsData.forEach(function(tweet){
+    tweetsDataToUse.forEach(function(tweet){
         
         let newReply = `
             <div class="tweet-reply reply-div">
@@ -178,6 +194,10 @@ function getFeedHtml(){
 
 function render(){
     document.getElementById('feed').innerHTML = getFeedHtml()
+}
+
+function updateLocalStorage(){
+    localStorage.setItem("tweetsDataLocal", JSON.stringify(tweetsDataToUse))
 }
 
 render()
